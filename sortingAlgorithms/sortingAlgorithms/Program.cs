@@ -18,7 +18,8 @@ namespace sortingAlgorithms
                 {1, selectionSort},
                 {2, bubbleSort},
                 {3, insertionSort},
-                {4, mergeSort}
+                {4, mergeSort},
+                {5, quickSort}
             };
             int[] array;
             //while (true)
@@ -39,7 +40,7 @@ namespace sortingAlgorithms
             //    printArray(array);
 
             //    Console.WriteLine("Выберите алгоритм сортировки");
-            //    Console.WriteLine("1 - Сортировка выбором, 2 - Сортировка пузырьком, 3 - Сортировка вставками, 4 - Сортировка слиянием (сортировка по умолчанию: Сортировка выбором)");
+            //    Console.WriteLine("1 - Сортировка выбором, 2 - Сортировка пузырьком, 3 - Сортировка вставками, 4 - Сортировка слиянием, 5 - Быстрая сортировка");
 
             //    int sortingType;
             //    try
@@ -66,10 +67,9 @@ namespace sortingAlgorithms
             //sw.Stop();
             ////printArray(array);
             //Console.WriteLine(sw.ElapsedMilliseconds);
-            algoTest(sortingAlgos[1]);
-            algoTest(sortingAlgos[2]);
-            algoTest(sortingAlgos[3]);
-            algoTest(sortingAlgos[4]);
+            array = new int[] {3,1,20,9,100,-4,-2,-1, 99 };
+            quickSort(array);
+            printArray(array);
         }
 
         private static void selectionSort(int[] array)
@@ -215,6 +215,45 @@ namespace sortingAlgorithms
             }
         }
 
+        private static void quickSort(int[] array)
+        {
+            quickSort(array, 0, array.Length-1);
+        }
+
+        private static void quickSort(int[] array, int left, int right)
+        {
+            if (left >= right)
+                return;
+
+            int pivot = partition(array, left, right);
+            quickSort(array, left, pivot - 1);
+            quickSort(array, pivot + 1, right);
+        }
+
+        private static int partition(int[] array, int left, int right)
+        {
+            int pivot = left - 1;
+            for(int i = left; i < right; i++)
+            {
+                if(array[i] < array[right])
+                {
+                    pivot++;
+                    swap(ref array[pivot], ref array[i]);
+                }
+            }
+
+            pivot++;
+            swap(ref array[pivot], ref array[right]);
+            return pivot;
+        }
+
+        private static void swap(ref int val1, ref int val2)
+        {
+            int val = val1;
+            val1 = val2;
+            val2 = val;
+        }
+
         private static int[] generateArray(int size)
         {
             int[] array = new int[size];
@@ -224,6 +263,30 @@ namespace sortingAlgorithms
                 array[i] = randomNumber;
             }
             return array;
+        }
+
+        private void countInversions(int[] array)
+        {
+            int inversionsCount = 0;
+            for (int i = 0; i < array.Length; i++)
+            {
+                for (int j = i + 1; j < array.Length; j++)
+                {
+                    if (array[j] < array[i])
+                        inversionsCount++;
+                }
+            }
+            Console.WriteLine($"Количество инверсий - {inversionsCount}");
+        }
+
+        private void statistics(int k, int[] array)
+        {
+            quickSort(array);
+            if(k <= 0 || k > array.Length + 1)
+            {
+                return;
+            }
+            Console.WriteLine($"Статистика - {array[k-1]}");
         }
 
         private static void algoTest(sortArray sortingMethod)
